@@ -1,0 +1,62 @@
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ./homarr/appdata:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_ENCRYPTION_KEY}
+    ports:
+      - '7575:7575'
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+
+  uptime-kuma:
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:latest
+    restart: unless-stopped
+    volumes:
+      - kuma_data:/app/data
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SERVER_ROOT_URL=https://grafana.sparkling-cave.uk
+      - GF_SERVER_DOMAIN=grafana.sparkling-cave.uk
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:9
+    container_name: forgejo
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - FORGEJO__server__DOMAIN=git.sparkling-cave.uk
+      - FORGEJO__server__ROOT_URL=https://git.sparkling-cave.uk/
+      - FORGEJO__server__SSH_DOMAIN=git.sparkling-cave.uk
+      - FORGEJO__server__SSH_PORT=222
+    volumes:
+      - forgejo_data:/data
+    ports:
+      - "222:22"
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  kuma_data:
+  grafana-data:
+  forgejo_data:

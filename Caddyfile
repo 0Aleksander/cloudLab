@@ -1,0 +1,15 @@
+home.sparkling-cave.uk {
+	reverse_proxy homarr:7575
+}
+
+status.sparkling-cave.uk {
+	reverse_proxy uptime-kuma:3001
+}
+
+grafana.sparkling-cave.uk {
+	reverse_proxy grafana:3000
+}
+
+git.sparkling-cave.uk {
+	reverse_proxy forgejo:3000
+}
