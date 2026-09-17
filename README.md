@@ -1,6 +1,6 @@
 # Cloudlab
 
-The Docker Compose stack running my personal VPS ("Bastion") — a dashboard, uptime monitoring, metrics, and a self-hosted git server, all behind one reverse proxy with automatic HTTPS. This is the actual config running in production on the box, not a tutorial or a demo.
+The Docker Compose stack running my personal VPS ("Bastion"): a dashboard, uptime monitoring, metrics, and a self-hosted git server, all behind one reverse proxy with automatic HTTPS. This is the actual config running in production on the box, not a tutorial or a demo.
 
 ## Architecture
 
@@ -20,13 +20,13 @@ flowchart LR
     caddy --> forgejo
 ```
 
-Caddy terminates TLS for every subdomain and reverse-proxies to the right container by name — no manual certificate handling, no exposed ports beyond 80/443 (and 222 for git-over-SSH).
+Caddy terminates TLS for every subdomain and reverse-proxies to the right container by name. No manual certificate handling, no exposed ports beyond 80/443 (and 222 for git-over-SSH).
 
 ## Services
 
 | Service | What it does | Reached at |
 |---|---|---|
-| Caddy | Reverse proxy, automatic HTTPS via Let's Encrypt | — |
+| Caddy | Reverse proxy, automatic HTTPS via Let's Encrypt | N/A |
 | Homarr | Home dashboard for the server | `home.*` |
 | Uptime Kuma | Uptime monitoring, public status page | `status.*` |
 | Grafana | Metrics dashboards | `grafana.*` |
@@ -48,6 +48,6 @@ docker compose up -d
 
 ## Notes
 
-- Runs on a small Hetzner VPS — the point is that this doesn't need to be big to be reliable.
+- Runs on a small Hetzner VPS. The point is that this doesn't need to be big to be reliable.
 - Secrets are kept out of git entirely. `.env.example` shows what's needed; real values live in a local, gitignored `.env`.
-- No named volumes are bind-mounted to source-controlled paths except where explicitly needed — container data (databases, caches) stays out of this repo.
+- No named volumes are bind-mounted to source-controlled paths except where explicitly needed. Container data (databases, caches) stays out of this repo.
