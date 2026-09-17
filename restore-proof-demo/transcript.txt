@@ -1,0 +1,38 @@
+root@bastion:~/src/cloudLab/restore-proof-demo# sudo bash run-test.sh
+[20:37:29] === Restore-Proof destructive test starting ===
+[20:37:29] Step 1: clean slate — remove any leftover demo container/volume from a prior run
+[20:37:29] Step 2: start a disposable Postgres (isolated volume, not the real stack)
+Unable to find image 'postgres:16' locally
+16: Pulling from library/postgres
+b3ffe1fd6e79: Pull complete
+af7708f26521: Pull complete
+f122bc3261fc: Pull complete
+5322d81b9b21: Pull complete
+9bd242f25e75: Pull complete
+9d1e9c1e61f4: Pull complete
+48dd761b6bfe: Pull complete
+00034b17b963: Pull complete
+8a082189cfe1: Pull complete
+988d57697ad2: Pull complete
+9f809ec5ff35: Pull complete
+4d710b756578: Pull complete
+6310eb16bf42: Pull complete
+3fa541d8cac9: Pull complete
+266e5ab4e0e8: Download complete
+344d251825bb: Download complete
+Digest: sha256:f1c3376c26f2609ab9f29f71f824103fe2fcd8ee0346485cb6122a4f93df6f94
+Status: Downloaded newer image for postgres:16
+[20:37:48] Step 3: seed fake data (100 rows) — this simulates real customer data
+[20:37:49] Before: 100 rows, checksum 925cd243a9cb8cf72883f376e2ce4c07
+[20:37:49] Step 4: take the backup (this is the thing everyone assumes works)
+[20:37:49] Backup written to /root/restoreproof_backup.sql (7015 bytes)
+[20:37:49] === Step 5: DESTROY IT — killing the container and deleting the volume, on purpose ===
+[20:37:50] Container + volume are gone. This is the pgdata-wiped-with-no-backup scenario — except we have the backup.
+[20:37:50] Step 6: bring up a fresh, empty Postgres (proves the old data is truly gone)
+[20:37:55] Fresh DB check (should be empty/no table): ''
+[20:37:55] Step 7: RESTORE from the backup
+[20:37:56] After restore: 100 rows, checksum 925cd243a9cb8cf72883f376e2ce4c07
+[20:37:56] === Time from destruction to verified restore: 7s ===
+[20:37:56] RESULT: PASS — data matches exactly (row count + checksum identical).
+[20:37:56] Step 8: cleanup — tearing down the demo container/volume, leaving Bastion clean
+[20:37:56] === Restore-Proof destructive test complete ===
